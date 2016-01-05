@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class Cell : MonoBehaviour {
     LineRenderer myLine;
     public int tileX;
     public int tileY;
     public MapTiles map;
+
 
     bool isNeighbour = false;
     Vector3 v3; // mouse position
@@ -41,7 +43,7 @@ public class Cell : MonoBehaviour {
                 if (tile.x == go.GetComponent<Cell>().tileX && tile.y == go.GetComponent<Cell>().tileY)
                 {
                     isNeighbour = true;
-                    makeConnection(go.GetComponent<Cell>().tileX, go.GetComponent<Cell>().tileY);
+                    makeConnection(go.GetComponent<Cell>().tileX, go.GetComponent<Cell>().tileY,tileX,tileY);
                     break;
                 }
             }
@@ -59,12 +61,11 @@ public class Cell : MonoBehaviour {
             myLine.SetPosition(0, v3);
         }
     }
-    void makeConnection(int x, int y)
+    void makeConnection(int x, int y,int origX,int origY)
     {
        Vector2 target = map.TileToWorldCoord(x,y);
         myLine.SetPosition(1, target);
-
-
+        Debug.Log("Conection made: "+ "[" + origX +","+origY+"] ---> " + "[" + x + "," + y + "]" );
     }
    GameObject MouseCast()
     { 
