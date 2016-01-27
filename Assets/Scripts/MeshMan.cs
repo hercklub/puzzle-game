@@ -1,27 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MeshMan : MonoBehaviour {
+    //nodes of completed shape
+    public List<Vector2> nodes;
 
     // Use this for initialization
-    void MouseCast()
+
+
+    public void ClearMesh()
     {
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit))
+        foreach (var ele in nodes)
         {
-            Debug.Log(hit.transform.name);
+            Debug.Log(ele.x + " , " + ele.y);
         }
     }
 
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            MouseCast();
 
-        }
-       
-    }
 
 }
