@@ -15,11 +15,11 @@ public class MapTiles : MonoBehaviour
     public Node[,] graph;
 
     [HideInInspector]
-    public List<Vector2> vertices;
+    public List<Vector2> vertices; // all veritces that makes shape
 
     [HideInInspector]
-    public List<Vector2> shape;
-
+    public List<Vector2> shape; // only corners of shape
+   
     // for shape recognition
     [HideInInspector]
     public int fistDirShape;
@@ -31,8 +31,15 @@ public class MapTiles : MonoBehaviour
 
     public bool onlyNearestNeighbour;
 
-    int mapSizeX = 5;
-    int mapSizeY = 5;
+    public string seed;
+    public bool useRandomSeed;
+
+    [Range(0, 100)]
+    public int randomFillPercent;
+
+    public int mapSizeX = 5;
+    public int mapSizeY = 5;
+
     int[,] matrix;
 
 
@@ -65,14 +72,14 @@ public class MapTiles : MonoBehaviour
         {0,1,0,1,0},
         {1,0,1,0,1},
         };*/
-        
+        /*
         matrix = new int[5, 5] {
         {1,1,1,1,1},
         {1,1,1,1,1},
-        {1,1,0,1,1},
         {1,1,1,1,1},
         {1,1,1,1,1},
-        };
+        {1,1,1,1,1}
+        };*/
         /*
         matrix = new int[5, 5] {
         {0,1,1,1,0},
@@ -82,6 +89,10 @@ public class MapTiles : MonoBehaviour
         {0,1,1,1,0},
         };
         */
+        matrix = new int[mapSizeX, mapSizeY];
+        //int _w,int _h,string _seed,bool _useSeed,int _fill,ref int[,] _map
+        LevelGeneration gen = new LevelGeneration(mapSizeX,mapSizeY,seed,useRandomSeed,randomFillPercent,ref matrix);
+        gen.GenerateMap();
         GenerateMapData(matrix);
         GenerateVisuals();
         GenerateGraph();     
@@ -99,10 +110,11 @@ public class MapTiles : MonoBehaviour
                 go.GetComponent<MeshFilter>().mesh = null;
                 
                 MeshMan manager = go.GetComponent<MeshMan>();
-
+                Debug.Log("CLEAR MESH");
                 foreach (var ele in manager.nodes)
                 {
                     Node toDelete = graph[(int)ele.x,(int)ele.y];
+                    Debug.Log(ele.x + " " + ele.y);
                     toDelete.isConnected = false;
 
                     // Delete lines
@@ -178,7 +190,7 @@ public class MapTiles : MonoBehaviour
                                     Debug.Log("FOUND TRIANGLE" + "[" + u.x + "  " + u.y + "]"
                                                                + "[" + v.node.x + "  " + v.node.y + "]"
                                                                + "[" + w.node.x + "  " + w.node.y + "]"
-                                        );
+                                        );is
                                 }
                             }
                         }
@@ -335,8 +347,10 @@ public class MapTiles : MonoBehaviour
     }
     public void ClearPath(bool clearShape)
     {
+        Debug.Log("VERTICES: " + vertices.Count);
         if (clearShape)
         {
+            
             foreach (var ele in vertices)
             {
                 Node toDelete = graph[(int)ele.x, (int)ele.y];
@@ -357,6 +371,7 @@ public class MapTiles : MonoBehaviour
         }
         else
         {
+            
             vertices.Clear();
             shape.Clear();
 

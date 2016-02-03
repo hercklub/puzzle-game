@@ -21,7 +21,7 @@ public class ShapeRecognition : MonoBehaviour {
     public bool ValidShape()
     {
 
-        Debug.Log(map.shape.Count);
+       // Debug.Log(map.shape.Count);
         if (map.shape.Count == 3) // Triangle
         {
 
@@ -97,10 +97,10 @@ public class ShapeRecognition : MonoBehaviour {
         {
             if (oldEle != new Vector2(-1, -1))
             {
-               Debug.Log(map.DeltaMovement(ele, oldEle));
+               //Debug.Log(map.DeltaMovement(ele, oldEle));
                 if (map.DeltaMovement(ele, oldEle) % 2 != type)
                 {
-                    Debug.Log(type + "   " + ele + " " + oldEle);
+                    //Debug.Log(type + "   " + ele + " " + oldEle);
                     
                     return false;
                 }
