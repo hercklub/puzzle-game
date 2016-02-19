@@ -40,6 +40,7 @@ public class LevelGeneration
 
     void RandomFillMap()
     {
+       
         if (useRandomSeed)
         {
             seed = Time.time.ToString();
@@ -51,8 +52,8 @@ public class LevelGeneration
         {
             for (int y = 0; y < height; y++)
             {
-      
-                    map[x, y] = (pseudoRandom.Next(0, 100) < randomFillPercent) ? 1 : 0;
+                
+                map[x, y] = (pseudoRandom.Next(0, 100) < randomFillPercent) ? 1 : 0;
                 
             }
         }

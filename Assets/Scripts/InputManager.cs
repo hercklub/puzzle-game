@@ -4,7 +4,7 @@ using System.Collections;
 public class InputManager : MonoBehaviour {
 
 
-    bool clicked;
+   public bool clicked;
     int tileX = -1;
     int tileY = -1;
 
@@ -14,12 +14,14 @@ public class InputManager : MonoBehaviour {
     MapTiles map;
     GameObject prevGO;
 
-    // Use this for initialization
-    void Start ()
+    int counter = 0;
+
+    BoardManager board;
+    void Awake()
     {
-        map = FindObjectOfType<MapTiles>();
-        clicked = true;
-	}
+        board = FindObjectOfType<BoardManager>();
+    }
+
 
     void Update()
     {
@@ -46,27 +48,38 @@ public class InputManager : MonoBehaviour {
             if (clickedGO != null)
             {
            
-                if(clicked && (tileX != clickedGO.GetComponent<Cell>().tileX || tileY != clickedGO.GetComponent<Cell>().tileY))
+                if((tileX != clickedGO.GetComponent<Cell>().tileX || tileY != clickedGO.GetComponent<Cell>().tileY))
                 {
-                    //Debug.Log("draged" + clickedGO.GetComponent<Cell>().tileX + " " + clickedGO.GetComponent<Cell>().tileY);
+                   // Debug.Log("draged" + clickedGO.GetComponent<Cell>().tileX + " " + clickedGO.GetComponent<Cell>().tileY);
                     tileX = clickedGO.GetComponent<Cell>().tileX;
                     tileY = clickedGO.GetComponent<Cell>().tileY;
-                    //Debug.Log("Registered Cell" + tileX + " " +tileY );
+                   // Debug.Log("Registered Cell" + tileX + " " +tileY );
                     if ( (tileX != oldTileX || tileY != oldTileY) && oldTileX != -1 && oldTileY != -1 && prevGO != null)
                     {
-                        prevGO.GetComponent<Cell>().setConnection(prevGO.GetComponent<Cell>().tileX, prevGO.GetComponent<Cell>().tileY,clickedGO);
-                        Debug.Log("Connect " + prevGO.GetComponent<Cell>().tileX + " " + prevGO.GetComponent<Cell>().tileY + " ----> " + clickedGO.GetComponent<Cell>().tileX + " " + clickedGO.GetComponent<Cell>().tileY);
-
+                        if (!board.Lock)
+                        {
+                            prevGO.GetComponent<Cell>().setConnection(prevGO.GetComponent<Cell>().tileX, prevGO.GetComponent<Cell>().tileY, clickedGO);
+                            Debug.Log("Connect " + prevGO.GetComponent<Cell>().tileX + " " + prevGO.GetComponent<Cell>().tileY + " ----> " + clickedGO.GetComponent<Cell>().tileX + " " + clickedGO.GetComponent<Cell>().tileY);
+                        }
+                        else
+                        {
+                            // Reset line position
+                            prevGO.GetComponent<Cell>().SetLinePostion(prevGO.transform.position);
+                            prevGO = null;
+                            tileX = -1;
+                            tileY = -1;
+                        }
                     }
+
                     oldTileX = tileX;
                     oldTileY = tileY;
-                    clicked = false;
+                    clicked = true;
                     prevGO = clickedGO;
                 }
                 else
                 {
                     
-                    clicked = true;
+                    clicked = false;
 
                 }
             }
@@ -84,7 +97,8 @@ public class InputManager : MonoBehaviour {
 
         if (Input.GetMouseButtonUp(0) && prevGO !=null)
         {
-           // Debug.Log("Reset position to zero of !" + prevGO.GetComponent<Cell>().tileX + " " + prevGO.GetComponent<Cell>().tileY);
+
+            // Debug.Log("Reset position to zero of !" + prevGO.GetComponent<Cell>().tileX + " " + prevGO.GetComponent<Cell>().tileY);
             prevGO.GetComponent<Cell>().SetLinePostion(prevGO.transform.position);
             prevGO = null;
             tileX = -1;

@@ -18,23 +18,28 @@ public class ShapeRecognition : MonoBehaviour {
         
     }
 
-    public bool ValidShape()
+    public Shape ValidShape()
     {
-
-       // Debug.Log(map.shape.Count);
+        
+        //Debug.Log("SHAPE IN RECOGNITION");
+        //Debug.Log(map.shape.Count);
+        //foreach (var ele in map.shape)
+        //{
+        //    Debug.Log(ele.x + " "  + ele.y);
+        //}
         if (map.shape.Count == 3) // Triangle
         {
 
-            return true;
+            return new Shape.Triangle();
         }
-        if (map.shape.Count == 4) // Square
+        else if (map.shape.Count == 4) // Square
         {
             Debug.Log("4 GON");
             // direction between first 2 nodes
             int dirType = map.DeltaMovement(map.shape[0], map.shape[1]);
             //Debug.Log("INIT: " + dirType + " " + map.shape[0] +" " + map.shape[1]);
             //lenght , in case of square , all sides will be equal
-            float length = Vector2.Distance(map.shape[0],map.shape[1]);
+            float length = Vector2.Distance(map.shape[0], map.shape[1]);
             //determine if shape have diffrent side lenghts
             bool rectangleFlag = false;
             /*                   Direction types
@@ -56,38 +61,52 @@ public class ShapeRecognition : MonoBehaviour {
 
 
              */
-            
+
             if (dirType % 2 != 0)
             {
 
-                if (CheckAllNodesDirection(1, ref rectangleFlag,length))
+                if (CheckAllNodesDirection(1, ref rectangleFlag, length))
                 {
                     if (!rectangleFlag)
+                    {
                         Debug.Log("SQUARE");
+                        return new Shape.Rectangle(true);
+                    }
                     else
+                    {
                         Debug.Log("RECTANGLE");
-                    return true;
+                        return new Shape.Rectangle(false);
+                    }
+                    
 
                 }
-    
+
             }
             else
             {
 
-                if (CheckAllNodesDirection(0, ref rectangleFlag,length))
+                if (CheckAllNodesDirection(0, ref rectangleFlag, length))
                 {
                     if (!rectangleFlag)
-                        Debug.Log("DIAMOND");
+                    {
+                        return new Shape.Diamond(true);
+                    }
                     else
+                    {
                         Debug.Log("DIAMOND RECT");
-                    return true;
+                        return new Shape.Diamond(false);
+                    }
                 }
             }
 
-            return false;
+            return null;
+        }
+        else
+        {
+            Debug.Log("NOT SUPPRTED SHAPE , NUM OF CRONERS " + map.shape.Count);
         }
 
-        return false;
+        return null;
     }
 
     bool CheckAllNodesDirection(int type, ref bool isRec,float len)
@@ -125,7 +144,4 @@ public class ShapeRecognition : MonoBehaviour {
             return true;
     }
     
-	void Update () {
-	
-	}
 }
